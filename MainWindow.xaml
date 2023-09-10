@@ -1,0 +1,53 @@
+﻿<Window x:Class="suing.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:suing"
+        mc:Ignorable="d"
+        Title="MainWindow" Closing="MainWindow_Close" Height="450" Width="800">
+    <Grid Margin="10" RenderTransformOrigin="0.428,0.341">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid>
+            <Label x:Name="label" Content="変換対象ファイル"/>
+            <ListBox x:Name="FileListBox" d:ItemsSource="{d:SampleData}" AllowDrop="True" Drop="OnDrop_FileListBox" MinHeight="200" ItemsSource="{Binding FileList}" ScrollViewer.CanContentScroll="True" Margin="0,30,0,0"/>
+        </Grid>
+
+        <Grid Grid.Column="1" Margin="10,0,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Label x:Name="label1" Content="画像サイズ" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Center"/>
+            <Label x:Name="label2" Content="幅" HorizontalAlignment="Left" Margin="0,0,0,0" Grid.Row="1" VerticalAlignment="Center"/>
+            <TextBox x:Name="inputWidth" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="1" TextWrapping="Wrap" Text="{Binding ImageWidth}" VerticalAlignment="Center" Width="120" MaxLength="5" />
+            <Label x:Name="label3" Content="高さ" HorizontalAlignment="Left" Grid.Row="2" VerticalAlignment="Center"/>
+            <TextBox x:Name="inputHeight" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="2" TextWrapping="Wrap" Text="{Binding ImageHeight}" VerticalAlignment="Center" Width="120" MaxLength="5" />
+            <Label x:Name="label4" Content="画質" HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Center"/>
+            <TextBox x:Name="inputQuality" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="3" TextWrapping="Wrap" Text="{Binding ImageQuality}" VerticalAlignment="Center" Width="120" MaxLength="5" />
+            <Label x:Name="label5" Content="上書き" HorizontalAlignment="Left" Grid.Row="4" VerticalAlignment="Center" Margin="0,0,-9,0"/>
+            <ComboBox x:Name="selectOverwrite" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="4" VerticalAlignment="Center" Width="120" SelectedValue="{Binding FileOverwrite}" SelectedValuePath="Tag">
+                <ComboBoxItem Content="別名で保存" Tag="0" />
+                <ComboBoxItem Content="上書き" Tag="1" />
+            </ComboBox>
+            <Button x:Name="buttonConvert" Click="OnClickButton" Grid.Column="1" Content="変換" HorizontalAlignment="Left" Grid.Row="5" VerticalAlignment="Center"/>
+        </Grid>
+
+    </Grid>
+</Window>
