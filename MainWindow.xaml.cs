@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.WindowsAPICodePack.Dialogs;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -25,6 +26,7 @@ namespace suing
 		public int FileOverwrite { get; set; } = 1;
 		public ObservableCollection<string> FileList { get; set; }
 		private readonly object FileListLock;
+		private string saveFolderName;
 
 		public MainWindow()
 		{
@@ -68,7 +70,10 @@ namespace suing
 					case ".ZIP":
 						lock (FileListLock)
 						{
-							FileList.Add(name);
+							if (!FileList.Where(item => item == name).Any())
+							{
+								FileList.Add(name);
+							}
 						}
 						break;
 					default:
@@ -83,6 +88,7 @@ namespace suing
 		private void OnClickButton(object sender, RoutedEventArgs e)
 		{
 			SaveSettings();
+			saveFolderName = folderName.Text;
 			_ = Task.Run(ConvertTask);
 		}
 
@@ -91,6 +97,7 @@ namespace suing
 			_ = buttonConvert.Dispatcher.BeginInvoke(() => IsEnabled = false);
 			// TODO: 日本語のみ
 			var encoding = Encoding.GetEncoding("shift_jis");
+			//var encoding = Encoding.UTF8;
 			while (true)
 			{
 				if (FileList.Count <= 0)
@@ -115,13 +122,19 @@ namespace suing
 					ConvertFolder(tempPath);
 
 					string tmpZipFile = targetFile;
-					while(true)
+					if (saveFolderName != "")
+					{
+						tmpZipFile = Path.Combine(saveFolderName, Path.GetFileName(tmpZipFile));
+					}
+					while (true)
 					{
 						if (!File.Exists(tmpZipFile))
 						{
 							break;
 						}
-						tmpZipFile = Path.Combine(Path.GetDirectoryName(tmpZipFile),
+						var w = Path.GetDirectoryName(tmpZipFile);
+						if (w == null) { break; }
+						tmpZipFile = Path.Combine(w,
 							Path.GetFileNameWithoutExtension(tmpZipFile) + "_new" + Path.GetExtension(tmpZipFile));
 					}
 					ZipFile.CreateFromDirectory(tempPath, tmpZipFile, CompressionLevel.Optimal, false, encoding);
@@ -214,7 +227,6 @@ namespace suing
 				break;
 			}
 			newImg.Dispose();
-			newImg = null;
 			Debug.Print(file);
 		}
 
@@ -227,6 +239,37 @@ namespace suing
 			catch (Exception)
 			{
 				throw new Exception("jpeg encoder not found");
+			}
+		}
+
+		private void OnKeyDown_FileListBox(object sender, System.Windows.Input.KeyEventArgs e)
+		{
+			if (e.Key == System.Windows.Input.Key.Delete)
+			{
+				var list = new List<string>(FileListBox.SelectedItems.Cast<string>());
+
+				foreach (var item in list)
+				{
+					if (item == null)
+						break;
+					_ = FileList.Remove(item as string);
+				}
+			}
+		}
+
+		private void OnClickBrowseButton(object sender, RoutedEventArgs e)
+		{
+			using (var dialog = new CommonOpenFileDialog()
+			{
+				Title = "保存先フォルダ指定",
+				InitialDirectory = "",
+				IsFolderPicker = true,
+			})
+			{
+				if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+				{
+					folderName.Text = dialog.FileName;
+				}
 			}
 		}
 	}

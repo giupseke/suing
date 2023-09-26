@@ -18,7 +18,16 @@
 
         <Grid>
             <Label x:Name="label" Content="変換対象ファイル"/>
-            <ListBox x:Name="FileListBox" d:ItemsSource="{d:SampleData}" AllowDrop="True" Drop="OnDrop_FileListBox" MinHeight="200" ItemsSource="{Binding FileList}" ScrollViewer.CanContentScroll="True" Margin="0,30,0,0"/>
+            <ListBox
+                x:Name="FileListBox"
+                d:ItemsSource="{d:SampleData}"
+                AllowDrop="True"
+                Drop="OnDrop_FileListBox"
+                KeyDown="OnKeyDown_FileListBox"
+                MinHeight="200"
+                ItemsSource="{Binding FileList}"
+                ScrollViewer.CanContentScroll="True"
+                Margin="0,30,0,0"/>
         </Grid>
 
         <Grid Grid.Column="1" Margin="10,0,0,0">
@@ -29,9 +38,10 @@
                 <RowDefinition />
                 <RowDefinition />
                 <RowDefinition />
+                <RowDefinition />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="60" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Label x:Name="label1" Content="画像サイズ" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Center"/>
@@ -41,13 +51,28 @@
             <TextBox x:Name="inputHeight" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="2" TextWrapping="Wrap" Text="{Binding ImageHeight}" VerticalAlignment="Center" Width="120" MaxLength="5" />
             <Label x:Name="label4" Content="画質" HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Center"/>
             <TextBox x:Name="inputQuality" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="3" TextWrapping="Wrap" Text="{Binding ImageQuality}" VerticalAlignment="Center" Width="120" MaxLength="5" />
-            <Label x:Name="label5" Content="上書き" HorizontalAlignment="Left" Grid.Row="4" VerticalAlignment="Center" Margin="0,0,-9,0"/>
-            <ComboBox x:Name="selectOverwrite" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="4" VerticalAlignment="Center" Width="120" SelectedValue="{Binding FileOverwrite}" SelectedValuePath="Tag">
+            <Label x:Name="label6" Content="出力先" HorizontalAlignment="Left" Grid.Row="4" VerticalAlignment="Center"/>
+            <Grid Grid.Column="1" Grid.Row="4">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="30" />
+                </Grid.ColumnDefinitions>
+            <TextBox x:Name="folderName" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" MaxLines="1"/>
+            <Button x:Name="buttonBrowse"
+                    Click="OnClickBrowseButton"
+                    Content="参照"
+                    Grid.Column="1"
+                    Grid.Row="0" VerticalAlignment="Center"/>
+            </Grid>
+            <Label x:Name="label5" Content="上書き" HorizontalAlignment="Left" Grid.Row="5" VerticalAlignment="Center" Margin="0,0,-9,0"/>
+            <ComboBox x:Name="selectOverwrite" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="5" VerticalAlignment="Center" Width="120" SelectedValue="{Binding FileOverwrite}" SelectedValuePath="Tag">
                 <ComboBoxItem Content="別名で保存" Tag="0" />
                 <ComboBoxItem Content="上書き" Tag="1" />
             </ComboBox>
-            <Button x:Name="buttonConvert" Click="OnClickButton" Grid.Column="1" Content="変換" HorizontalAlignment="Left" Grid.Row="5" VerticalAlignment="Center"/>
+            <Button x:Name="buttonConvert" Click="OnClickButton" Grid.Column="1" Content="変換" HorizontalAlignment="Left" Grid.Row="6" VerticalAlignment="Center"/>
         </Grid>
-
     </Grid>
 </Window>
