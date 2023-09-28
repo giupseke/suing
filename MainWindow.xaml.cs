@@ -41,6 +41,7 @@ namespace suing
 			ImageWidth = Properties.Settings.Default.ImageWidth;
 			ImageHeight = Properties.Settings.Default.ImageHeight;
 			ImageQuality = Properties.Settings.Default.ImageQuality;
+			folderName.Text = Properties.Settings.Default.SaveFolderName;
 
 			DataContext = this;
 		}
@@ -55,6 +56,7 @@ namespace suing
 			Properties.Settings.Default.ImageWidth = ImageWidth;
 			Properties.Settings.Default.ImageHeight = ImageHeight;
 			Properties.Settings.Default.ImageQuality = ImageQuality;
+			Properties.Settings.Default.SaveFolderName = folderName.Text;
 			Properties.Settings.Default.Save();
 		}
 
@@ -85,10 +87,40 @@ namespace suing
 			}
 		}
 
+		private void OnKeyDown_FileListBox(object sender, System.Windows.Input.KeyEventArgs e)
+		{
+			if (e.Key == System.Windows.Input.Key.Delete)
+			{
+				var list = new List<string>(FileListBox.SelectedItems.Cast<string>());
+
+				foreach (var item in list)
+				{
+					if (item == null)
+						break;
+					_ = FileList.Remove(item as string);
+				}
+			}
+		}
+
+		private void OnClickBrowseButton(object sender, RoutedEventArgs e)
+		{
+			using CommonOpenFileDialog dialog = new()
+			{
+				Title = "保存先フォルダ指定",
+				InitialDirectory = "",
+				IsFolderPicker = true,
+			};
+			if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+			{
+				folderName.Text = dialog.FileName;
+				SaveSettings();
+			}
+		}
+
 		private void OnClickButton(object sender, RoutedEventArgs e)
 		{
-			SaveSettings();
 			saveFolderName = folderName.Text;
+			SaveSettings();
 			_ = Task.Run(ConvertTask);
 		}
 
@@ -242,35 +274,5 @@ namespace suing
 			}
 		}
 
-		private void OnKeyDown_FileListBox(object sender, System.Windows.Input.KeyEventArgs e)
-		{
-			if (e.Key == System.Windows.Input.Key.Delete)
-			{
-				var list = new List<string>(FileListBox.SelectedItems.Cast<string>());
-
-				foreach (var item in list)
-				{
-					if (item == null)
-						break;
-					_ = FileList.Remove(item as string);
-				}
-			}
-		}
-
-		private void OnClickBrowseButton(object sender, RoutedEventArgs e)
-		{
-			using (var dialog = new CommonOpenFileDialog()
-			{
-				Title = "保存先フォルダ指定",
-				InitialDirectory = "",
-				IsFolderPicker = true,
-			})
-			{
-				if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
-				{
-					folderName.Text = dialog.FileName;
-				}
-			}
-		}
 	}
 }
