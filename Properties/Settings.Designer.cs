@@ -25,10 +25,10 @@ namespace suing.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("800")]
-        public int MainWindow_Width {
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        public double MainWindow_Width {
             get {
-                return ((int)(this["MainWindow_Width"]));
+                return ((double)(this["MainWindow_Width"]));
             }
             set {
                 this["MainWindow_Width"] = value;
@@ -37,10 +37,10 @@ namespace suing.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int MainWindow_Left {
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        public double MainWindow_Left {
             get {
-                return ((int)(this["MainWindow_Left"]));
+                return ((double)(this["MainWindow_Left"]));
             }
             set {
                 this["MainWindow_Left"] = value;
@@ -49,10 +49,10 @@ namespace suing.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("450")]
-        public int MainWindow_Height {
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        public double MainWindow_Height {
             get {
-                return ((int)(this["MainWindow_Height"]));
+                return ((double)(this["MainWindow_Height"]));
             }
             set {
                 this["MainWindow_Height"] = value;
@@ -61,10 +61,10 @@ namespace suing.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int MainWindow_Top {
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        public double MainWindow_Top {
             get {
-                return ((int)(this["MainWindow_Top"]));
+                return ((double)(this["MainWindow_Top"]));
             }
             set {
                 this["MainWindow_Top"] = value;

@@ -38,6 +38,13 @@ namespace suing
 
 			InitializeComponent();
 
+			if (Properties.Settings.Default.MainWindow_Left > 0)
+			{
+				this.Left = Properties.Settings.Default.MainWindow_Left;
+				this.Top = Properties.Settings.Default.MainWindow_Top;
+				this.Width = Properties.Settings.Default.MainWindow_Width;
+				this.Height = Properties.Settings.Default.MainWindow_Height;
+			}
 			ImageWidth = Properties.Settings.Default.ImageWidth;
 			ImageHeight = Properties.Settings.Default.ImageHeight;
 			ImageQuality = Properties.Settings.Default.ImageQuality;
@@ -54,6 +61,10 @@ namespace suing
 
 		private void SaveSettings()
 		{
+			Properties.Settings.Default.MainWindow_Left = this.RestoreBounds.Left;
+			Properties.Settings.Default.MainWindow_Top = this.RestoreBounds.Top;
+			Properties.Settings.Default.MainWindow_Width = this.RestoreBounds.Width;
+			Properties.Settings.Default.MainWindow_Height = this.RestoreBounds.Height;
 			Properties.Settings.Default.ImageWidth = ImageWidth;
 			Properties.Settings.Default.ImageHeight = ImageHeight;
 			Properties.Settings.Default.ImageQuality = ImageQuality;
