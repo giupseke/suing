@@ -110,6 +110,18 @@ namespace suing.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ImageFormat {
+            get {
+                return ((string)(this["ImageFormat"]));
+            }
+            set {
+                this["ImageFormat"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string SaveFolderName {
             get {
                 return ((string)(this["SaveFolderName"]));

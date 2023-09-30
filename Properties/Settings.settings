@@ -23,6 +23,9 @@
     <Setting Name="ImageQuality" Type="System.String" Scope="User">
       <Value Profile="(Default)">90</Value>
     </Setting>
+    <Setting Name="ImageFormat" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
     <Setting Name="SaveFolderName" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>

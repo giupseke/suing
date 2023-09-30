@@ -23,7 +23,7 @@ namespace suing
 		public string ImageWidth { get; set; } = "640";
 		public string ImageHeight { get; set; } = "480";
 		public string ImageQuality { get; set; } = "90";
-		public int FileOverwrite { get; set; } = 1;
+		public string ImageFormat { get; set; } = "";
 		public ObservableCollection<string> FileList { get; set; }
 		private readonly object FileListLock;
 		private string saveFolderName;
@@ -41,6 +41,7 @@ namespace suing
 			ImageWidth = Properties.Settings.Default.ImageWidth;
 			ImageHeight = Properties.Settings.Default.ImageHeight;
 			ImageQuality = Properties.Settings.Default.ImageQuality;
+			ImageFormat = Properties.Settings.Default.ImageFormat;
 			folderName.Text = Properties.Settings.Default.SaveFolderName;
 
 			DataContext = this;
@@ -56,6 +57,7 @@ namespace suing
 			Properties.Settings.Default.ImageWidth = ImageWidth;
 			Properties.Settings.Default.ImageHeight = ImageHeight;
 			Properties.Settings.Default.ImageQuality = ImageQuality;
+			Properties.Settings.Default.ImageFormat = ImageFormat;
 			Properties.Settings.Default.SaveFolderName = folderName.Text;
 			Properties.Settings.Default.Save();
 		}
@@ -205,10 +207,16 @@ namespace suing
 
 		private void ConvertFile(string file)
 		{
+			var outFormat = ImageFormat;
 			switch (Path.GetExtension(file).ToUpper())
 			{
 			case ".JPG":
+				if (outFormat == "")
+					outFormat = "JPEG";
+				break;
 			case ".PNG":
+				if (outFormat == "")
+					outFormat = "PNG";
 				break;
 			default:
 				Debug.Print($"No Support Format {file}");
@@ -244,15 +252,15 @@ namespace suing
 			orgImg.Dispose();
 
 			File.Delete(file);
-			switch (Path.GetExtension(file).ToUpper())
+			switch (outFormat)
 			{
-			case ".JPG":
+			case "JPEG":
 				var parameters = new EncoderParameters(1);
 				parameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, long.Parse(ImageQuality));
 				newImg.Save(file, GetJpegEncoder(), parameters);
 				break;
-			case ".PNG":
-				newImg.Save(file, ImageFormat.Png);
+			case "PNG":
+				newImg.Save(file, System.Drawing.Imaging.ImageFormat.Png);
 				break;
 			default:
 				Debug.Print($"No Support Format {file}");
