@@ -26,7 +26,7 @@ namespace suing
 		public string ImageFormat { get; set; } = "";
 		public ObservableCollection<string> FileList { get; set; }
 		private readonly object FileListLock;
-		private string saveFolderName;
+		private string saveFolderName = "";
 
 		public MainWindow()
 		{
