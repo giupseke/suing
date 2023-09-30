@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
 
 namespace suing
@@ -20,13 +21,8 @@ namespace suing
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		public string ImageWidth { get; set; } = "640";
-		public string ImageHeight { get; set; } = "480";
-		public string ImageQuality { get; set; } = "90";
-		public string ImageFormat { get; set; } = "";
 		public ObservableCollection<string> FileList { get; set; }
 		private readonly object FileListLock;
-		private string saveFolderName = "";
 
 		public MainWindow()
 		{
@@ -45,10 +41,12 @@ namespace suing
 				this.Width = Properties.Settings.Default.MainWindow_Width;
 				this.Height = Properties.Settings.Default.MainWindow_Height;
 			}
-			ImageWidth = Properties.Settings.Default.ImageWidth;
-			ImageHeight = Properties.Settings.Default.ImageHeight;
-			ImageQuality = Properties.Settings.Default.ImageQuality;
-			ImageFormat = Properties.Settings.Default.ImageFormat;
+			inputWidth.Text = Properties.Settings.Default.ImageWidth;
+			inputHeight.Text = Properties.Settings.Default.ImageHeight;
+			inputQuality.Text = Properties.Settings.Default.ImageQuality;
+			selectFormat.SelectedValue = Properties.Settings.Default.ImageFormat;
+			selectOverwrite.SelectedValue = Properties.Settings.Default.SaveOverwrite ? "1" : "0";
+			checkClean.IsChecked = Properties.Settings.Default.CleanFolder;
 			folderName.Text = Properties.Settings.Default.SaveFolderName;
 
 			DataContext = this;
@@ -65,10 +63,12 @@ namespace suing
 			Properties.Settings.Default.MainWindow_Top = this.RestoreBounds.Top;
 			Properties.Settings.Default.MainWindow_Width = this.RestoreBounds.Width;
 			Properties.Settings.Default.MainWindow_Height = this.RestoreBounds.Height;
-			Properties.Settings.Default.ImageWidth = ImageWidth;
-			Properties.Settings.Default.ImageHeight = ImageHeight;
-			Properties.Settings.Default.ImageQuality = ImageQuality;
-			Properties.Settings.Default.ImageFormat = ImageFormat;
+			Properties.Settings.Default.ImageWidth = inputWidth.Text;
+			Properties.Settings.Default.ImageHeight = inputHeight.Text;
+			Properties.Settings.Default.ImageQuality = inputQuality.Text;
+			Properties.Settings.Default.ImageFormat = selectFormat.SelectedValue as string;
+			Properties.Settings.Default.SaveOverwrite = selectOverwrite.SelectedIndex != 0;
+			Properties.Settings.Default.CleanFolder = checkClean.IsChecked ?? false;
 			Properties.Settings.Default.SaveFolderName = folderName.Text;
 			Properties.Settings.Default.Save();
 		}
@@ -132,12 +132,17 @@ namespace suing
 
 		private void OnClickButton(object sender, RoutedEventArgs e)
 		{
-			saveFolderName = folderName.Text;
+			var saveFolderName = folderName.Text;
+			var imageWidth = int.Parse(inputWidth.Text);
+			var imageHeight = int.Parse(inputHeight.Text);
+			var quality = long.Parse(inputQuality.Text);
+			var format = selectFormat.SelectedValue as string;
+			var isclean = checkClean.IsChecked ?? false;
 			SaveSettings();
-			_ = Task.Run(ConvertTask);
+			_ = Task.Run(() => ConvertTask(saveFolderName, imageWidth, imageHeight, quality, format ?? "", isclean));
 		}
 
-		private void ConvertTask()
+		private void ConvertTask(string saveFolderName, int targetWidth, int targetHeight, long quality, string format, bool isclean)
 		{
 			_ = buttonConvert.Dispatcher.BeginInvoke(() => IsEnabled = false);
 			// TODO: 日本語のみ
@@ -159,12 +164,25 @@ namespace suing
 
 				try
 				{
+					var workstr = "";
+					var arc = ZipFile.OpenRead(targetFile);
+					foreach (var entry in arc.Entries)
+					{
+						workstr += entry.FullName;
+					}
+					var b = encoding.GetBytes(workstr);
+					var converted = encoding.GetString(b);
+					if (converted != workstr)
+					{
+						encoding = Encoding.UTF8;
+					}
+
 					string tempPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 					Debug.Print($"{targetFile} to {tempPath}");
 					Directory.CreateDirectory(tempPath);
 
 					ZipFile.ExtractToDirectory(targetFile, tempPath, encoding);
-					ConvertFolder(tempPath);
+					ConvertFolder(tempPath, targetWidth, targetHeight, quality, format, isclean);
 
 					string tmpZipFile = targetFile;
 					if (saveFolderName != "")
@@ -201,24 +219,28 @@ namespace suing
 			_ = buttonConvert.Dispatcher.BeginInvoke(() => IsEnabled = true);
 		}
 
-		private void ConvertFolder(string folder)
+		private static void ConvertFolder(string folder, int targetWidth, int targetHeight, long quality, string format, bool isclean)
 		{
 			string[] list = Directory.GetDirectories(folder);
 			foreach (var file in list)
 			{
-				ConvertFolder(file);
+				if (Path.GetFileName(file) == "__MACOSX")
+				{
+					Directory.Delete(file, true);
+					continue;
+				}
+				ConvertFolder(file, targetWidth, targetHeight, quality, format, isclean);
 			}
 
 			list = Directory.GetFiles(folder);
 			foreach (string file in list)
 			{
-				ConvertFile(file);
+				ConvertFile(file, targetWidth, targetHeight, quality, format);
 			}
 		}
 
-		private void ConvertFile(string file)
+		private static void ConvertFile(string file, int targetWidth, int targetHeight, long quality, string outFormat)
 		{
-			var outFormat = ImageFormat;
 			switch (Path.GetExtension(file).ToUpper())
 			{
 			case ".JPG":
@@ -234,9 +256,7 @@ namespace suing
 				return;
 			}
 
-			var targetWidth = int.Parse(ImageWidth);
-			var targetHeight = int.Parse(ImageHeight);
-			var orgImg = Image.FromFile(file);
+			var orgImg = System.Drawing.Image.FromFile(file);
 
 			if (orgImg.Size.Width < targetWidth && orgImg.Size.Height < targetHeight)
 			{
@@ -267,7 +287,7 @@ namespace suing
 			{
 			case "JPEG":
 				var parameters = new EncoderParameters(1);
-				parameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, long.Parse(ImageQuality));
+				parameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, quality);
 				newImg.Save(file, GetJpegEncoder(), parameters);
 				break;
 			case "PNG":

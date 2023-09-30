@@ -40,6 +40,7 @@
                 <RowDefinition />
                 <RowDefinition />
                 <RowDefinition />
+                <RowDefinition />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="60" />
@@ -47,20 +48,21 @@
             </Grid.ColumnDefinitions>
             <Label x:Name="label1" Content="画像サイズ" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Center"/>
             <Label x:Name="label2" Content="幅" HorizontalAlignment="Left" Margin="0,0,0,0" Grid.Row="1" VerticalAlignment="Center"/>
-            <TextBox x:Name="inputWidth" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="1" TextWrapping="Wrap" Text="{Binding ImageWidth}" VerticalAlignment="Center" Width="120" MaxLength="5" />
+            <TextBox x:Name="inputWidth" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Center" Width="120" MaxLength="5" />
             <Label x:Name="label3" Content="高さ" HorizontalAlignment="Left" Grid.Row="2" VerticalAlignment="Center"/>
-            <TextBox x:Name="inputHeight" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="2" TextWrapping="Wrap" Text="{Binding ImageHeight}" VerticalAlignment="Center" Width="120" MaxLength="5" />
+            <TextBox x:Name="inputHeight" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Center" Width="120" MaxLength="5" />
             <Label x:Name="label7" Content="フォーマット" HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Center"/>
-            <ComboBox x:Name="selectFormat" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Center" Width="120" SelectedValue="{Binding ImageFormat}" SelectedValuePath="Tag">
+            <ComboBox x:Name="selectFormat" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Center" Width="120" SelectedValuePath="Tag">
                 <ComboBoxItem Content="無変換" Tag="" />
                 <ComboBoxItem Content="JPEG" Tag="JPEG" />
                 <ComboBoxItem Content="PNG" Tag="PNG" />
             </ComboBox>
-
             <Label x:Name="label4" Content="画質" HorizontalAlignment="Left" Grid.Row="4" VerticalAlignment="Center"/>
-            <TextBox x:Name="inputQuality" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="4" TextWrapping="Wrap" Text="{Binding ImageQuality}" VerticalAlignment="Center" Width="120" MaxLength="5" />
-            <Label x:Name="label6" Content="出力先" HorizontalAlignment="Left" Grid.Row="5" VerticalAlignment="Center"/>
-            <Grid Grid.Column="1" Grid.Row="5">
+            <TextBox x:Name="inputQuality" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="4" TextWrapping="Wrap" VerticalAlignment="Center" Width="120" MaxLength="5" />
+            <Label x:Name="label8" Content="追加処理" HorizontalAlignment="Center" Grid.Row="5" VerticalAlignment="Center"/>
+            <CheckBox x:Name="checkClean" Grid.Column="1" Content="_MACOSXフォルダ削除" HorizontalAlignment="Left" Grid.Row="5" VerticalAlignment="Center"/>
+            <Label x:Name="label6" Content="出力先" HorizontalAlignment="Left" Grid.Row="6" VerticalAlignment="Center"/>
+            <Grid Grid.Column="1" Grid.Row="6">
                 <Grid.RowDefinitions>
                     <RowDefinition />
                 </Grid.RowDefinitions>
@@ -75,12 +77,12 @@
                     Grid.Column="1"
                     Grid.Row="0" VerticalAlignment="Center"/>
             </Grid>
-            <Label x:Name="label5" Content="上書き" HorizontalAlignment="Left" Grid.Row="6" VerticalAlignment="Center" Margin="0,0,-9,0"/>
-            <ComboBox x:Name="selectOverwrite" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="6" VerticalAlignment="Center" Width="120" SelectedValue="{Binding FileOverwrite}" SelectedValuePath="Tag">
+            <Label x:Name="label5" Content="上書き" HorizontalAlignment="Left" Grid.Row="7" VerticalAlignment="Center" Margin="0,0,-9,0"/>
+            <ComboBox x:Name="selectOverwrite" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="7" VerticalAlignment="Center" Width="120" SelectedValuePath="Tag">
                 <ComboBoxItem Content="別名で保存" Tag="0" />
                 <ComboBoxItem Content="上書き" Tag="1" />
             </ComboBox>
-            <Button x:Name="buttonConvert" Click="OnClickButton" Grid.Column="1" Content="変換" HorizontalAlignment="Left" Grid.Row="7" VerticalAlignment="Center"/>
+            <Button x:Name="buttonConvert" Click="OnClickButton" Grid.Column="1" Content="変換" HorizontalAlignment="Left" Grid.Row="8" VerticalAlignment="Center"/>
         </Grid>
     </Grid>
 </Window>

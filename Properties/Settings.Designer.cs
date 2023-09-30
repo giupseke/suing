@@ -130,5 +130,29 @@ namespace suing.Properties {
                 this["SaveFolderName"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool CleanFolder {
+            get {
+                return ((bool)(this["CleanFolder"]));
+            }
+            set {
+                this["CleanFolder"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SaveOverwrite {
+            get {
+                return ((bool)(this["SaveOverwrite"]));
+            }
+            set {
+                this["SaveOverwrite"] = value;
+            }
+        }
     }
 }
