@@ -176,6 +176,7 @@ namespace suing
 					{
 						encoding = Encoding.UTF8;
 					}
+					arc.Dispose();
 
 					string tempPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 					Debug.Print($"{targetFile} to {tempPath}");
